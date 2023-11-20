@@ -18,21 +18,56 @@ namespace Sighiartau_Adriana_Lab2.Pages.Books
         {
             _context = context;
         }
+        public string CurrentFilter { get; set; }
 
-        public IList<Book> Book { get;set; } = default!;
 
-        public async Task OnGetAsync()
+        public IList<Book> BookData { get; set; } = default!;
+        public string TitleSort { get; set; }
+        public string AuthorSort { get; set; }
+
+        public async Task OnGetAsync(string sortOrder, string
+searchString)
         {
-           if (_context.Book!=null)
+            if (_context.Book != null)
             {
-                Book = await _context.Book
+                BookData = await _context.Book
                     .Include(b => b.Publisher)
                     .Include(b => b.Author)
 
                     .ToListAsync();
+                TitleSort = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
+                AuthorSort = sortOrder == "author" ? "author_desc" : "author";
 
+                CurrentFilter = searchString;
+
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                    BookData = (IList<Book>)BookData.Where(s => s.Author.FirstName.Contains(searchString)
+
+                   || s.Author.LastName.Contains(searchString)
+                   || s.Title.Contains(searchString));
+
+                    switch (sortOrder)
+                    {
+                        case "title_desc":
+                            BookData = BookData.OrderByDescending(s =>
+                           s.Title).ToList();
+                            break;
+                        case "author_desc":
+                            BookData = BookData.OrderByDescending(s =>
+                           s.Author.FullName).ToList();
+                            break;
+                        case "author":
+                            BookData = BookData.OrderBy(s =>
+                           s.Author.FullName).ToList();
+                            break;
+                        default:
+                            BookData = BookData.OrderBy(s => s.Title).ToList();
+                            break;
+                    }
+
+                }
             }
-
         }
     }
 }
