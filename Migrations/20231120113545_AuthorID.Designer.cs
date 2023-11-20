@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sighiartau_Adriana_Lab2.Data;
 
@@ -11,9 +12,10 @@ using Sighiartau_Adriana_Lab2.Data;
 namespace Sighiartau_Adriana_Lab2.Migrations
 {
     [DbContext(typeof(Sighiartau_Adriana_Lab2Context))]
-    partial class Sighiartau_Adriana_Lab2ContextModelSnapshot : ModelSnapshot
+    [Migration("20231120113545_AuthorID")]
+    partial class AuthorID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,7 +53,7 @@ namespace Sighiartau_Adriana_Lab2.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
-                    b.Property<int?>("AuthorID")
+                    b.Property<int>("AuthorID")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
@@ -97,7 +99,9 @@ namespace Sighiartau_Adriana_Lab2.Migrations
                 {
                     b.HasOne("Sighiartau_Adriana_Lab2.Models.Author", "Author")
                         .WithMany("Books")
-                        .HasForeignKey("AuthorID");
+                        .HasForeignKey("AuthorID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Sighiartau_Adriana_Lab2.Models.Publisher", "Publisher")
                         .WithMany("Books")

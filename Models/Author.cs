@@ -1,4 +1,6 @@
-﻿namespace Sighiartau_Adriana_Lab2.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Sighiartau_Adriana_Lab2.Models
 {
     public class Author
     {
